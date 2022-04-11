@@ -1,0 +1,80 @@
+rm(list = ls())
+
+###### Load Data ######
+setwd("~/Downloads/GradSchool/Meta-Analysis/Environment Data")
+MD_Climate <- read.csv("Environmental Data All Year CNB.csv", header = T)
+na.omit(MD_Climate)
+View(MD_Climate)
+#Load libraries
+library("ggplot2")
+library("dplyr")
+library("tidyr")
+#Assign nominal data as factors
+month <- as.factor(MD_Climate$SampleDate)
+parameter <- as.factor(MD_Climate$Parameter)
+site <- as.factor(MD_Climate$MonitoringLocation)
+#Subset data
+names(MD_Climate)
+
+Monthly_pH <- filter(MD_Climate, Parameter == "PH")
+Monthly_Salinity <- filter(MD_Climate, Parameter == "SALINITY")
+Monthly_Temp <- filter(MD_Climate, Parameter == "WTEMP")
+
+
+###### Visualize ######
+
+##Environmental Parameters at All Sites connected
+pH_Plot_line <- ggplot(Monthly_pH,
+                       aes(x = Year, y = MeasureValue, color = MonitoringLocation)) +
+    geom_line() +
+    geom_point() +
+    labs( title = "Annual Water pH at Monitoring stations in MD",
+          x = "Year (August - November)",
+          y = "pH at 0.5 meters"
+    )
+pH_Plot_line
+
+Temp_Plot_line <- ggplot(Monthly_Temp,
+                         aes(x = Year, y = MeasureValue, color = MonitoringLocation)) +
+    geom_line() +
+    geom_point() +
+    labs( title = "Annual Water Temperature at Monitoring stations in MD",
+          x = "Year (August - November)",
+          y = "Temperature at 0.5 meters"
+    )
+Temp_Plot_line
+
+Sal_Plot_line <- ggplot(Monthly_Salinity,
+                        aes(x = Year, y = MeasureValue, color = MonitoringLocation)) +
+    geom_line() +
+    geom_point() +
+    labs( title = "Annual Water Salinity at Monitoring stations in MD",
+          x = "Year (August - November)",
+          y = "Salinity at 0.5 meters"
+    )
+Sal_Plot_line
+
+#Environmental averages per month at each site
+pH_Plot_bar <- ggplot(Monthly_pH, aes(x = SampleDate, y = MeasureValue, fill = MonitoringLocation)) +
+    geom_col(position = "dodge") +
+    labs( title = "Annual Water pH at Monitoring stations in MD",
+          x = "Month (All Year)",
+          y = "pH (SU) at 0.5 meters"
+    )
+pH_Plot_bar
+
+Temp_Plot_bar <- ggplot(Monthly_Temp, aes(x = SampleDate, y = MeasureValue, fill = MonitoringLocation)) +
+    geom_col(position = "dodge") +
+    labs( title = "Annual Water Temperature at Monitoring stations in MD",
+          x = "Month (All Year)",
+          y = "Temperature (Celcius) at 0.5 meters"
+    )
+Temp_Plot_bar
+
+Sal_Plot_bar <- ggplot(Monthly_Salinity, aes(x = SampleDate, y = MeasureValue, fill = MonitoringLocation)) +
+    geom_col(position = "dodge") +
+    labs( title = "Annual Water Salinity at Monitoring stations in MD",
+          x = "Month (All Year)",
+          y = "Salinity (PPT) at 0.5 meters"
+    )
+Sal_Plot_bar
